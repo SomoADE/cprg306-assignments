@@ -1,10 +1,10 @@
-import newItem from './new-item.js';
+import NewItem from "./new-item";
 
-export default function page() {
-    return (
-        <main className="p-6">
-            <h1 className="text-3xl font-bold mb-6">New Item </h1>
-            <newItem />
-        </main>
-    );
+export default function Week4() {
+  return (
+    <main className="flex flex-col items-center justify-center min-h-screen p-4">
+      <h1 className="text-2xl font-bold mb-4">Week 4 - Shopping List</h1>
+      <NewItem />
+    </main>
+  );
 }
