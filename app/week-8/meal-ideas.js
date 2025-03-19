@@ -1,39 +1,50 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const MealIdeas = ({ ingredient }) => {
-    const [meals, setMeals] = useState([]);
-    
-    useEffect(() => {
-        if (!ingredient) return; // Avoid fetching if no ingredient is selected
-        
-        const fetchMeals = async () => {
-            try {
-                const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
-                const data = await response.json();
-                setMeals(data.meals || []);
-            } catch (error) {
-                console.error("Error fetching meal ideas:", error);
-            }
-        };
+export default function MealIdeas({ ingredient }) {
+  const [search, setSearch] = useState("");
+  const [meals, setMeals] = useState([]);
 
-        fetchMeals();
-    }, [ingredient]);
+  useEffect(() => {
+    if (!ingredient) return;
 
-    return (
-        <div className="mt-6 p-4 border rounded-md shadow-md bg-gray-100">
-            <h2 className="text-lg font-bold text-center">Meal Ideas</h2>
-            {meals.length === 0 ? (
-                <p className="text-center text-gray-600">No meal ideas found.</p>
-            ) : (
-                <ul className="list-disc pl-6">
-                    {meals.map((meal) => (
-                        <li key={meal.idMeal} className="text-blue-500">{meal.strMeal}</li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    );
-};
+    fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setMeals(data.meals || []); // Ensure meals is always an array
+      })
+      .catch((error) => console.error("Error fetching meals:", error));
+  }, [ingredient]);
 
-export default MealIdeas;
+  return (
+    <div className="p-4 border rounded-md w-1/3">
+      <h2 className="text-lg font-semibold mb-2">Meal Ideas</h2>
+
+      {/* Search Box */}
+      <input
+        type="text"
+        placeholder="Search meals..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      {/* Filtered Meal List */}
+      {meals.length > 0 ? (
+        <ul className="list-disc pl-4">
+          {meals
+            .filter((meal) =>
+              meal.strMeal.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((meal) => (
+              <li key={meal.idMeal} className="text-gray-800">
+                {meal.strMeal}
+              </li>
+            ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">No meal ideas found.</p>
+      )}
+    </div>
+  );
+}

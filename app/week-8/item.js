@@ -1,14 +1,15 @@
-const Item = ({ name, quantity, category, onClick }) => {
-    return (
-        <li 
-            className="p-2 border-b flex justify-between cursor-pointer hover:bg-gray-200"
-            onClick={() => onClick(name.split(",")[0])} // Extract main name before comma
-        >
-            <span className="font-semibold">{name}</span>
-            <span className="text-gray-600">Qty: {quantity}</span>
-            <span className="text-blue-500 italic">{category}</span>
-        </li>
-    );
-};
+"use client";
+import React from "react";
 
-export default Item;
+export default function Item({ item, onItemSelect }) {
+  if (!item) return null; // Ensure item is defined before rendering
+
+  return (
+    <div
+      className="p-2 border-b cursor-pointer hover:bg-gray-200"
+      onClick={() => onItemSelect(item.name)}
+    >
+      <strong>{item.name}</strong> - <span className="text-gray-600">{item.category}</span>
+    </div>
+  );
+}
